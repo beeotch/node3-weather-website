@@ -17,6 +17,9 @@ const {
 // console.log(path.join(__dirname, '../public')) //.. go up 1 folder. then go to public directory
 
 const app = express();
+// make the port runs dynamically, if exists which in this case will be running on heroku, it will take the PORT number since its
+// not fixed. if it fails (not running on heroku), it will runs locally by taking port 3000
+const port = process.env.PORT || 3000;
 
 // Define paths for Express config
 const pubDirPath = path.join(__dirname, '../public')
@@ -83,7 +86,11 @@ app.get('/weather', (req, res) => {
         })
     }
 
-    geocode(address, (error, { latitude, longitude, location} = {}) => { //default object is entered here to avoid potential errors
+    geocode(address, (error, {
+        latitude,
+        longitude,
+        location
+    } = {}) => { //default object is entered here to avoid potential errors
 
         if (error) {
             return res.send({
@@ -103,7 +110,7 @@ app.get('/weather', (req, res) => {
                 address,
                 location,
                 forecastData
-            }) 
+            })
 
         })
 
@@ -154,8 +161,10 @@ app.get('*', (req, res) => {
 //app.com/help   <--- routes
 //app.com/about 
 
-// port 3000 is a common development port
+// port 3000 is a common development port, and this is only for running it locally in our machine
+// add beelow to deploy to heroku 
 
-app.listen(3000, () => {
-    console.log('Server is up on port 3000');
+// app.listen(3000, () => {
+app.listen(port, () => {
+    console.log('Server is up on port ' + port);
 })
